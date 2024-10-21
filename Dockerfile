@@ -1,32 +1,11 @@
-pipeline {
-    agent any
-    environment {
-        registry = "rahulchoudhary05" // Your Docker Hub username
-        imageName = "jenkinsdockerautomation" // Your desired image name
-        dockerImageTag = "latest"
-    }
-    stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/RahulChoudhary05/JenkinsDockerAutomaton.git'
-            }
-        }
-        stage('Build') {
-            steps {
-                dir('JenkinsDockerAutomaton') {
-                    bat 'gradlew clean build'
-                }
-            }
-        }
-        stage('Build and Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        def customImage = docker.build("${registry}/${imageName}:${dockerImageTag}", ".")
-                        customImage.push()
-                    }
-                }
-            }
-        }
-    }
-}
+# Use an official OpenJDK 8 runtime as a base image
+FROM openjdk:8
+
+# Expose port 8080
+EXPOSE 8080
+
+# Add the JAR file from the target directory to the root of the container and rename it
+ADD target/JenkinsDockerAutomation.jar /JenkinsDockerAutomation.jar
+
+# Specify the command to run on container startup
+ENTRYPOINT ["java", "-jar", "/JenkinsDockerAutomation.jar"]
