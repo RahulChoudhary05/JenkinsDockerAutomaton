@@ -1,6 +1,6 @@
  
 FROM openjdk
-WORKDIR /app
-COPY . /app
+WORKDIR /lib/src/main/java/_Gradle_Project
+COPY ./app .
 RUN javac testsell.java
 CMD ["java" , "testsell"]
